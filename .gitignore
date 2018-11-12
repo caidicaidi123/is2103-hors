@@ -21,3 +21,13 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+
+
+/is2103-hors/nbproject/private/
+/is2103-hors/is2103-hors-ejb/nbproject/private/
+/is2103-hors/build.xml
+/is2103-hors/build/
+/is2103-hors/nbbuild/
+/is2103-hors/dist/
+/is2103-hors/nbdist/
+/is2103-hors/.nb-gradle/
