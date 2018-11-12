@@ -6,6 +6,7 @@
 package session.stateless;
 
 import entity.RoomType;
+import error.NoResultException;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Remote;
@@ -20,5 +21,7 @@ public interface RoomControllerBeanRemote {
     public String createNewRoomType(String typeName, String description, BigDecimal rate);
 
     public List<RoomType> retrieveAllRoomType();
+
+    public RoomType retrieveRoomTypeById(Long roomTypeId) throws NoResultException;
     
 }

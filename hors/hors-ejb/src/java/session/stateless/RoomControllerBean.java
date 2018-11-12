@@ -6,6 +6,7 @@
 package session.stateless;
 
 import entity.RoomType;
+import error.NoResultException;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -38,5 +39,16 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
     public List<RoomType> retrieveAllRoomType() {
         Query query = em.createQuery("SELECT rt FROM RoomType rt");
         return query.getResultList();
+    }
+    
+    @Override
+    public RoomType retrieveRoomTypeById(Long roomTypeId) throws NoResultException{
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.id=:inRoomTypeId");
+        query.setParameter("inRoomTypeId", roomTypeId);
+        RoomType roomType = (RoomType) query.getSingleResult();
+        if (roomType == null) {
+            throw new NoResultException("Room type does not exist!");
+        }
+        return roomType;
     }
 }

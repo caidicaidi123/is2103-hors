@@ -29,7 +29,8 @@ public class MainApp {
         Scanner sc = new Scanner(System.in);
         Integer response = 0;
         
-        while (true) {            
+        while (true) {  
+            System.out.println("********");
             System.out.println("Welcome to HoRS Management Client!");
             System.out.println("1. Create new room type.");
             System.out.println("2. View Room Type Details.");
@@ -63,6 +64,7 @@ public class MainApp {
     
     
     private String createNewRoomType() {
+        System.out.println("********");
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter room type name: ");
         String typeName = sc.nextLine().trim();
@@ -75,13 +77,23 @@ public class MainApp {
     }
     
     private void viewRoomTypeDetails() {
+        System.out.println("********");
+       
         List<RoomType> roomTypes = roomControllerBeanRemote.retrieveAllRoomType();
         Scanner sc = new Scanner(System.in);
-        System.out.println("Select a room type to view detials");
+        
         for (RoomType roomType : roomTypes) {
             String title = roomType.getId().toString() + " " + roomType.getTypeName();
             System.out.println(title);
         }
-        
+           
+        System.out.println("Select a room type to view detials");
+        Long roomTypeId = sc.nextLong();
+        try {
+            RoomType roomType = roomControllerBeanRemote.retrieveRoomTypeById(roomTypeId);
+            System.out.println("Room type: "+roomType.getTypeName()+"\n"+"Room type details: "+roomType.getDescription());
+        } catch (Exception e) {
+            System.out.println("Room Type does not exist!");
+        }
     }
 }
