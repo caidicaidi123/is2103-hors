@@ -21,6 +21,7 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
     @PersistenceContext(unitName = "hors-ejbPU")
     private EntityManager em;
 
+    @Override
     public String createNewRoomType(String typeName, String description, BigDecimal rate) {
         RoomType roomType = new RoomType(typeName, description, rate);
         try {

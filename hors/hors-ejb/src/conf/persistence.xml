@@ -3,6 +3,8 @@
   <persistence-unit name="hors-ejbPU" transaction-type="JTA">
     <jta-data-source>jdbc/horsDatasource</jta-data-source>
     <class>entity.Employee</class>
+    <class>entity.Room</class>
+    <class>entity.RoomType</class>
     <exclude-unlisted-classes>true</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
