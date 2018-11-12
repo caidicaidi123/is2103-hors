@@ -6,6 +6,7 @@
 package horsmanagementclient;
 
 import entity.RoomType;
+import error.NoResultException;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
@@ -34,6 +35,7 @@ public class MainApp {
             System.out.println("Welcome to HoRS Management Client!");
             System.out.println("1. Create new room type.");
             System.out.println("2. View Room Type Details.");
+            System.out.println("3. Update Room Type.");
             System.out.println("10. Exit ");
             response = 0;
             
@@ -46,6 +48,9 @@ public class MainApp {
                 } 
                 else if (response == 2) {
                     viewRoomTypeDetails();
+                }
+                else if (response == 3) {
+                    updateRoomType();
                 }
                 else {
                     System.out.println("Invalid option, please try again!\n");
@@ -78,7 +83,6 @@ public class MainApp {
     
     private void viewRoomTypeDetails() {
         System.out.println("********");
-       
         List<RoomType> roomTypes = roomControllerBeanRemote.retrieveAllRoomType();
         Scanner sc = new Scanner(System.in);
         
@@ -95,5 +99,41 @@ public class MainApp {
         } catch (Exception e) {
             System.out.println("Room Type does not exist!");
         }
+    }
+    
+    private void updateRoomType() {
+        System.out.println("********");
+        
+        // retrieve and display all room types
+        List<RoomType> roomTypes = roomControllerBeanRemote.retrieveAllRoomType();
+        Scanner sc = new Scanner(System.in);
+        
+        for (RoomType roomType : roomTypes) {
+            String title = roomType.getId().toString() + " " + roomType.getTypeName();
+            System.out.println(title);
+        }
+        
+        // let user select a room type and update
+        System.out.println("Select a room type to update");
+        Long roomTypeId = sc.nextLong();
+        sc.nextLine();
+        try {
+            RoomType roomType = roomControllerBeanRemote.retrieveRoomTypeById(roomTypeId);
+            System.out.println("Room type: "+roomType.getTypeName()+"\n"+"Room type details: "+roomType.getDescription()+"\n"+"Room rate: "+roomType.getRate());
+            System.out.println("********");
+        } catch (NoResultException e) {
+            System.out.println("Room Type does not exist!");
+        }
+        
+        System.out.println("Please enter new room type name");
+        String typeName = sc.nextLine().trim();
+        
+        System.out.println("Please enter new description");
+        String description = sc.nextLine().trim();
+        
+        System.out.println("Please enter new room type rate");
+        BigDecimal rate = sc.nextBigDecimal();
+        
+        roomControllerBeanRemote.updateRoomTypeById(roomTypeId, typeName, description, rate);
     }
 }

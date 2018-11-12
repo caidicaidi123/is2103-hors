@@ -23,5 +23,7 @@ public interface RoomControllerBeanRemote {
     public List<RoomType> retrieveAllRoomType();
 
     public RoomType retrieveRoomTypeById(Long roomTypeId) throws NoResultException;
+
+    public void updateRoomTypeById(Long roomTypeId, String typeName, String description, BigDecimal rate);
     
 }

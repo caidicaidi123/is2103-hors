@@ -51,4 +51,14 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
         }
         return roomType;
     }
+    
+    @Override
+    public void updateRoomTypeById(Long roomTypeId, String typeName, String description, BigDecimal rate) {
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.id=:inRoomTypeId");
+        query.setParameter("inRoomTypeId", roomTypeId);
+        RoomType roomType = (RoomType) query.getSingleResult();
+        roomType.setTypeName(typeName);
+        roomType.setDescription(description);
+        roomType.setRate(rate);
+    }
 }
