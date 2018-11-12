@@ -35,3 +35,9 @@ hs_err_pid*
 /hors/hors-ejb/nbproject/private/
 /hors/horsManagementClient/nbproject/private/
 /hors/horsLibrary/nbproject/private/
+/hors/horsLibrary/build/
+/hors/hors-ejb/dist/
+/hors/hors-ejb/build/
+/hors/horsManagementClient/build/
+/hors/horsManagementClient/dist/
+/hors/horsLibrary/dist/
