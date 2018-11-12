@@ -34,7 +34,9 @@ public class DataInitialisationBean {
     
     @PostConstruct
     public void postConstruct() {
-        initialiseData();
+        if (em.find(Employee.class, 1l) == null) {
+            initialiseData();
+        }
     }
     
     private void initialiseData() {

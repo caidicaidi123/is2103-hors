@@ -7,6 +7,7 @@ package horsmanagementclient;
 
 import entity.RoomType;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 import session.stateless.RoomControllerBeanRemote;
 
@@ -31,6 +32,7 @@ public class MainApp {
         while (true) {            
             System.out.println("Welcome to HoRS Management Client!");
             System.out.println("1. Create new room type.");
+            System.out.println("2. View Room Type Details.");
             System.out.println("10. Exit ");
             response = 0;
             
@@ -40,6 +42,12 @@ public class MainApp {
                 
                 if (response == 1) {
                     createNewRoomType();
+                } 
+                else if (response == 2) {
+                    viewRoomTypeDetails();
+                }
+                else {
+                    System.out.println("Invalid option, please try again!\n");
                 }
             }
             
@@ -64,5 +72,16 @@ public class MainApp {
         BigDecimal rate = sc.nextBigDecimal();
         
         return roomControllerBeanRemote.createNewRoomType(typeName, description, rate);
+    }
+    
+    private void viewRoomTypeDetails() {
+        List<RoomType> roomTypes = roomControllerBeanRemote.retrieveAllRoomType();
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Select a room type to view detials");
+        for (RoomType roomType : roomTypes) {
+            String title = roomType.getId().toString() + " " + roomType.getTypeName();
+            System.out.println(title);
+        }
+        
     }
 }

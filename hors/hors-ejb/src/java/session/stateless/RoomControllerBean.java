@@ -7,9 +7,11 @@ package session.stateless;
 
 import entity.RoomType;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -30,5 +32,11 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
         } catch (Exception e) {
             return e.toString();
         }
+    }
+    
+    @Override
+    public List<RoomType> retrieveAllRoomType() {
+        Query query = em.createQuery("SELECT rt FROM RoomType rt");
+        return query.getResultList();
     }
 }

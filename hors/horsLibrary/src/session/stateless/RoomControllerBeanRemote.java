@@ -5,7 +5,9 @@
  */
 package session.stateless;
 
+import entity.RoomType;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -16,5 +18,7 @@ import javax.ejb.Remote;
 public interface RoomControllerBeanRemote {
 
     public String createNewRoomType(String typeName, String description, BigDecimal rate);
+
+    public List<RoomType> retrieveAllRoomType();
     
 }
