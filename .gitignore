@@ -23,11 +23,15 @@
 hs_err_pid*
 
 
-/is2103-hors/nbproject/private/
-/is2103-hors/is2103-hors-ejb/nbproject/private/
-/is2103-hors/build.xml
-/is2103-hors/build/
-/is2103-hors/nbbuild/
-/is2103-hors/dist/
-/is2103-hors/nbdist/
-/is2103-hors/.nb-gradle/
+/hors/nbproject/private/
+/hors/is2103-hors-ejb/nbproject/private/
+/hors/build.xml
+/hors/build/
+/hors/nbbuild/
+/hors/dist/
+/hors/nbdist/
+/hors/.nb-gradle/
+/hors/nbproject/private/
+/hors/hors-ejb/nbproject/private/
+/hors/horsManagementClient/nbproject/private/
+/hors/horsLibrary/nbproject/private/
