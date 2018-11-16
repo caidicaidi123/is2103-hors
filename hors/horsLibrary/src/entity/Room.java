@@ -23,14 +23,14 @@ public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Boolean inUse;
+    private Boolean status;
     private Long roomNumber;
     
     @ManyToOne
     private RoomType roomType;
 
     public Room() {
-        this.inUse = false;
+        this.status = true;
     }
 
     public Room(Long roomNumber) {
@@ -39,8 +39,6 @@ public class Room implements Serializable {
         this.roomNumber = roomNumber;
     }
 
-    
-    
     public Room(Long roomNumber, RoomType roomType) {
         this();
         
@@ -48,8 +46,6 @@ public class Room implements Serializable {
         this.roomType = roomType;
     }
 
-    
-    
     public Long getRoomNumber() {
         return roomNumber;
     }
@@ -58,12 +54,12 @@ public class Room implements Serializable {
         this.roomNumber = roomNumber;
     }
     
-    public Boolean getInUse() {
-        return inUse;
+    public Boolean getStatus() {
+        return status;
     }
 
-    public void setInUse(Boolean inUse) {
-        this.inUse = inUse;
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
     public RoomType getRoomType() {

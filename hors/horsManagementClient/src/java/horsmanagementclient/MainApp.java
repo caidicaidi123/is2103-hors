@@ -7,9 +7,6 @@ package horsmanagementclient;
 
 import entity.Room;
 import entity.RoomType;
-import error.NoResultException;
-import error.NoRoomTypeException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 import session.stateless.RoomControllerBeanRemote;
@@ -35,6 +32,8 @@ public class MainApp {
         while (true) {  
             System.out.println("********");
             System.out.println("Welcome to HoRS Management Client!");
+            System.out.println("Main Menu:");
+            System.out.println("********");
             System.out.println("1. Create new room type.");
             System.out.println("2. View Room Type Details.");
             System.out.println("3. Update Room Type.");
@@ -139,7 +138,7 @@ public class MainApp {
             RoomType roomType = roomControllerBeanRemote.retrieveRoomTypeById(roomTypeId);
             System.out.println("Room type: "+roomType.getTypeName()+"\n"+"Room type details: "+roomType.getDescription());
             System.out.println("********");
-        } catch (NoResultException e) {
+        } catch (Exception e) {
             System.out.println("Room Type does not exist!");
         }
         
@@ -174,19 +173,15 @@ public class MainApp {
         roomNumber = sc.nextLong();
         sc.nextLine();
         
-        
-        
+
         // retrieve room types
         List<RoomType> roomTypes = roomControllerBeanRemote.retrieveAllRoomType();
-        
-        
-        
         
         if (roomTypes.size() > 0) {
             System.out.println("Please select a room type");
             System.out.println("0. Do Not Set Room Type Now");
             for (RoomType roomType : roomTypes) {
-                String title = roomType.getId().toString() + " " + roomType.getTypeName();
+                String title = roomType.getId().toString() + ". " + roomType.getTypeName();
                 System.out.println(title);
             }
             System.out.print(">");
@@ -202,10 +197,54 @@ public class MainApp {
     }
     
     private void updateRoom() {
+        Scanner sc = new Scanner(System.in);
+        Long roomId, roomTypeId, roomNumber;
+        Integer statusId = 0;
+        Boolean status;
+        
+        // display all rooms
         viewAllRooms();
+        
+        // user input: room id
         System.out.println("Please enter room ID:");
         System.out.print(">");
+        roomId = sc.nextLong();
+        sc.nextLine();
         
+        // user input: room number
+        System.out.println("Please enter new room number: ");
+        System.out.print(">");
+        roomNumber = sc.nextLong();
+        sc.nextLine();
+        
+        // user input: room status
+        while (statusId != 1 && statusId != 2) {
+            System.out.println("Please update room status: \n1. Available \n2. Not Available");
+            System.out.print(">");
+            statusId = sc.nextInt();
+            sc.nextLine();
+        }
+        
+        status = statusId == 1;
+        
+        // user input: room type id
+        // retrieve room types
+        List<RoomType> roomTypes = roomControllerBeanRemote.retrieveAllRoomType();
+        if (roomTypes.size() > 0) {
+            System.out.println("Please select a room type");
+            System.out.println("0. Do Not Set Room Type Now");
+            for (RoomType roomType : roomTypes) {
+                String title = roomType.getId().toString() + " " + roomType.getTypeName();
+                System.out.println(title);
+            }
+            System.out.print(">");
+            roomTypeId = sc.nextLong();
+            sc.nextLine();
+        } else {
+            roomTypeId = 0L;
+        }
+        
+        roomControllerBeanRemote.updateRoomById(roomId, roomNumber, roomTypeId, status);
     }
     
     private void viewAllRooms() {
@@ -213,7 +252,7 @@ public class MainApp {
         List<Room> rooms = roomControllerBeanRemote.retrieveAllRooms();
         for(Room room:rooms) {
             String result;
-            result = "Room id: "+room.getId()+" Room Number: "+ room.getRoomNumber() + " Room in use: " + room.getInUse();
+            result = "Room id: "+room.getId()+" Room Number: "+ room.getRoomNumber() + " Room available: " + room.getStatus();
             try {
                 result = result + " Room Type: " + room.getRoomType().getTypeName();
             } catch (Exception e) {

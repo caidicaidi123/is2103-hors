@@ -9,12 +9,12 @@ package error;
  *
  * @author caidi
  */
-public class NoResultException extends Exception {
+public class RoomNotFoundException extends Exception {
 
-    public NoResultException() {
+    public RoomNotFoundException() {
     }
     
-    public NoResultException(String msg) {
+    public RoomNotFoundException (String msg) {
         super(msg);
     }
 }

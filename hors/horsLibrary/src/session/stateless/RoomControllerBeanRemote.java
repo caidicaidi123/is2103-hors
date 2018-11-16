@@ -7,10 +7,9 @@ package session.stateless;
 
 import entity.Room;
 import entity.RoomType;
-import error.NoResultException;
-import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Remote;
+import javax.persistence.NoResultException;
 
 /**
  *
