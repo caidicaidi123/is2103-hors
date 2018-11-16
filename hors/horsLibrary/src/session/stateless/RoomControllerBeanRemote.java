@@ -18,12 +18,15 @@ import javax.ejb.Remote;
 @Remote
 public interface RoomControllerBeanRemote {
 
-    public String createNewRoomType(String typeName, String description, BigDecimal rate);
+    public String createNewRoomType(String typeName, String description);
 
     public List<RoomType> retrieveAllRoomType();
 
     public RoomType retrieveRoomTypeById(Long roomTypeId) throws NoResultException;
 
-    public void updateRoomTypeById(Long roomTypeId, String typeName, String description, BigDecimal rate);
+    public void updateRoomTypeById(Long roomTypeId, String typeName, String description);
+
+    public void createNewRoom(Long roomNumber, Long roomTypeId);
+    
     
 }

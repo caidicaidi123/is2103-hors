@@ -24,6 +24,7 @@ public class Room implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Boolean inUse;
+    private Long roomNumber;
     
     @ManyToOne
     private RoomType roomType;
@@ -32,9 +33,10 @@ public class Room implements Serializable {
         this.inUse = false;
     }
 
-    public Room(RoomType roomType) {
+    public Room(Long roomNumber, RoomType roomType) {
         this();
         
+        this.roomNumber = roomNumber;
         this.roomType = roomType;
     }
     

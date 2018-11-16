@@ -37,6 +37,7 @@ public class MainApp {
             System.out.println("2. View Room Type Details.");
             System.out.println("3. Update Room Type.");
             System.out.println("4. View All Room Types");
+            System.out.println("5. Create new room");
             System.out.println("10. Exit ");
             response = 0;
             
@@ -55,6 +56,9 @@ public class MainApp {
                 }
                 else if (response == 4) {
                     viewAllRoomTypes();
+                }
+                else if (response == 5) {
+                    
                 }
                 else {
                     System.out.println("Invalid option, please try again!\n");
@@ -79,10 +83,8 @@ public class MainApp {
         String typeName = sc.nextLine().trim();
         System.out.println("Please enter room description, including size, bed, capacity etc");
         String description = sc.nextLine().trim();
-        System.out.println("Please enter room rate");
-        BigDecimal rate = sc.nextBigDecimal();
         
-        return roomControllerBeanRemote.createNewRoomType(typeName, description, rate);
+        return roomControllerBeanRemote.createNewRoomType(typeName, description);
     }
     
     private void viewRoomTypeDetails() {
@@ -123,7 +125,7 @@ public class MainApp {
         sc.nextLine();
         try {
             RoomType roomType = roomControllerBeanRemote.retrieveRoomTypeById(roomTypeId);
-            System.out.println("Room type: "+roomType.getTypeName()+"\n"+"Room type details: "+roomType.getDescription()+"\n"+"Room rate: "+roomType.getRate());
+            System.out.println("Room type: "+roomType.getTypeName()+"\n"+"Room type details: "+roomType.getDescription());
             System.out.println("********");
         } catch (NoResultException e) {
             System.out.println("Room Type does not exist!");
@@ -135,10 +137,8 @@ public class MainApp {
         System.out.println("Please enter new description");
         String description = sc.nextLine().trim();
         
-        System.out.println("Please enter new room type rate");
-        BigDecimal rate = sc.nextBigDecimal();
         
-        roomControllerBeanRemote.updateRoomTypeById(roomTypeId, typeName, description, rate);
+        roomControllerBeanRemote.updateRoomTypeById(roomTypeId, typeName, description);
     }
     
     private void viewAllRoomTypes() {
@@ -148,5 +148,22 @@ public class MainApp {
             String title = roomType.getId().toString() + " " + roomType.getTypeName();
             System.out.println(title);
         }
+    }
+    
+    private void createNewRoom() {
+        Long roomNumber, roomTypeId;
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.println("********");
+        System.out.println("Please enter room number");
+        roomNumber = sc.nextLong();
+        sc.nextLine();
+        
+        System.out.println("Please select a room type");
+        roomTypeId = sc.nextLong();
+        sc.nextLine();
+        
+        roomControllerBeanRemote.createNewRoom(roomNumber, roomTypeId);
+        System.out.println("Room: "+roomNumber+" created successfully");
     }
 }

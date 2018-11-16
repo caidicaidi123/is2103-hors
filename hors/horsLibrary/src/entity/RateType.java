@@ -6,12 +6,13 @@
 package entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 /**
@@ -19,42 +20,37 @@ import javax.persistence.OneToMany;
  * @author caidi
  */
 @Entity
-public class RoomType implements Serializable {
+public class RateType implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String typeName;
+    private String rateTypeName;
     private String description;
-    private Boolean disabled;
+    private BigDecimal rate;
     
-    @OneToMany(mappedBy = "roomType")
-    private List<Room> rooms;
-    
-    @ManyToMany(mappedBy = "roomTypes")
+    @OneToMany(mappedBy = "rateType")
     private List<RoomRate> roomRates;
 
-    public RoomType() {
-        this.disabled = false;
+    public RateType() {
+        this.roomRates = new ArrayList<>();
     }
 
-    public RoomType(String typeName, String description) {
+    public RateType(String rateTypeName, String description, BigDecimal rate) {
         this();
         
-        this.typeName = typeName;
+        this.rateTypeName = rateTypeName;
         this.description = description;
-    }
-    
-    
-    
-
-    public String getTypeName() {
-        return typeName;
+        this.rate = rate;
     }
 
-    public void setTypeName(String typeName) {
-        this.typeName = typeName;
+    public String getRateTypeName() {
+        return rateTypeName;
+    }
+
+    public void setRateTypeName(String rateTypeName) {
+        this.rateTypeName = rateTypeName;
     }
 
     public String getDescription() {
@@ -65,21 +61,25 @@ public class RoomType implements Serializable {
         this.description = description;
     }
 
-    public Boolean getDisabled() {
-        return disabled;
+    public BigDecimal getRate() {
+        return rate;
     }
 
-    public void setDisabled(Boolean disabled) {
-        this.disabled = disabled;
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
     }
 
-    public List<Room> getRooms() {
-        return rooms;
+    public List<RoomRate> getRoomRates() {
+        return roomRates;
     }
 
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
+    public void setRoomRates(List<RoomRate> roomRates) {
+        this.roomRates = roomRates;
     }
+    
+    
+    
+    
     
 
     public Long getId() {
@@ -100,10 +100,10 @@ public class RoomType implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof RoomType)) {
+        if (!(object instanceof RateType)) {
             return false;
         }
-        RoomType other = (RoomType) object;
+        RateType other = (RateType) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -112,7 +112,7 @@ public class RoomType implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.RoomType[ id=" + id + " ]";
+        return "entity.RateType[ id=" + id + " ]";
     }
     
 }

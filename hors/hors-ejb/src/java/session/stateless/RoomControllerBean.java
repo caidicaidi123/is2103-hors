@@ -5,6 +5,7 @@
  */
 package session.stateless;
 
+import entity.Room;
 import entity.RoomType;
 import error.NoResultException;
 import java.math.BigDecimal;
@@ -25,8 +26,8 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
     private EntityManager em;
 
     @Override
-    public String createNewRoomType(String typeName, String description, BigDecimal rate) {
-        RoomType roomType = new RoomType(typeName, description, rate);
+    public String createNewRoomType(String typeName, String description) {
+        RoomType roomType = new RoomType(typeName, description);
         try {
             em.persist(roomType);
             return "New room type created successfully";
@@ -53,12 +54,22 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
     }
     
     @Override
-    public void updateRoomTypeById(Long roomTypeId, String typeName, String description, BigDecimal rate) {
+    public void updateRoomTypeById(Long roomTypeId, String typeName, String description) {
+        RoomType roomType = getRoomType(roomTypeId);
+        roomType.setTypeName(typeName);
+        roomType.setDescription(description);
+    }
+    
+    @Override
+    public void createNewRoom (Long roomNumber, Long roomTypeId) {
+        RoomType roomType = getRoomType(roomTypeId);
+        Room room = new Room(roomNumber, roomType);
+    }
+    
+    private RoomType getRoomType(Long roomTypeId) {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.id=:inRoomTypeId");
         query.setParameter("inRoomTypeId", roomTypeId);
         RoomType roomType = (RoomType) query.getSingleResult();
-        roomType.setTypeName(typeName);
-        roomType.setDescription(description);
-        roomType.setRate(rate);
+        return roomType;
     }
 }
