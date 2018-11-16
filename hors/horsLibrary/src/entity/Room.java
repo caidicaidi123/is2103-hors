@@ -33,20 +33,30 @@ public class Room implements Serializable {
         this.inUse = false;
     }
 
+    public Room(Long roomNumber) {
+        this();
+        
+        this.roomNumber = roomNumber;
+    }
+
+    
+    
     public Room(Long roomNumber, RoomType roomType) {
         this();
         
         this.roomNumber = roomNumber;
         this.roomType = roomType;
     }
-    
-    
 
     
     
-    
-    
-    
+    public Long getRoomNumber() {
+        return roomNumber;
+    }
+
+    public void setRoomNumber(Long roomNumber) {
+        this.roomNumber = roomNumber;
+    }
     
     public Boolean getInUse() {
         return inUse;

@@ -5,6 +5,7 @@
  */
 package session.stateless;
 
+import entity.Room;
 import entity.RoomType;
 import error.NoResultException;
 import java.math.BigDecimal;
@@ -27,6 +28,10 @@ public interface RoomControllerBeanRemote {
     public void updateRoomTypeById(Long roomTypeId, String typeName, String description);
 
     public void createNewRoom(Long roomNumber, Long roomTypeId);
+
+    public void updateRoomById(Long roomId, Long roomNumber, Long roomTypeId, Boolean inUse);
+
+    public List<Room> retrieveAllRooms();
     
     
 }

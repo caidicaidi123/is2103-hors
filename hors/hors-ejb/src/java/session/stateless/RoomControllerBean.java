@@ -55,21 +55,59 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
     
     @Override
     public void updateRoomTypeById(Long roomTypeId, String typeName, String description) {
-        RoomType roomType = getRoomType(roomTypeId);
+        RoomType roomType = getRoomTypeById(roomTypeId);
         roomType.setTypeName(typeName);
         roomType.setDescription(description);
     }
     
+    /**
+     *
+     * @param roomNumber
+     * @param roomTypeId
+     */
     @Override
-    public void createNewRoom (Long roomNumber, Long roomTypeId) {
-        RoomType roomType = getRoomType(roomTypeId);
-        Room room = new Room(roomNumber, roomType);
+    public void createNewRoom(Long roomNumber, Long roomTypeId) {
+        Room room;
+        if (roomTypeId == 0) {
+            room = new Room(roomNumber);
+        } else {
+            RoomType roomType = getRoomTypeById(roomTypeId);
+            room = new Room(roomNumber, roomType);
+        }
+        
+        em.persist(room);
     }
     
-    private RoomType getRoomType(Long roomTypeId) {
+    @Override
+    public void updateRoomById(Long roomId, Long roomNumber, Long roomTypeId, Boolean inUse) {
+        Room room = getRoomById(roomId);
+        room.setRoomNumber(roomNumber);
+        if (roomTypeId != 0) {
+            RoomType roomType = getRoomTypeById(roomTypeId);
+            room.setRoomType(roomType);
+        }
+        room.setInUse(inUse);
+    }
+    
+    @Override
+    public List<Room> retrieveAllRooms() {
+        Query query = em.createQuery("SELECT rms FROM Room rms");
+        return query.getResultList();
+    }
+    
+    private RoomType getRoomTypeById(Long roomTypeId) {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.id=:inRoomTypeId");
         query.setParameter("inRoomTypeId", roomTypeId);
         RoomType roomType = (RoomType) query.getSingleResult();
         return roomType;
     }
+    
+    private Room getRoomById(Long roomId) {
+        Query query = em.createQuery("SELECT rm FROM Room rm WHERE rm.id=:inRoomId");
+        query.setParameter("inRoomId", roomId);
+        Room room = (Room) query.getSingleResult();
+        return room;
+    }
+    
+    
 }
