@@ -41,6 +41,7 @@ public class MainApp {
             System.out.println("5. Create new room");
             System.out.println("6. Update Room");
             System.out.println("7. View All Rooms");
+            System.out.println("8. Delete a Room");
             System.out.println("10. Exit ");
             response = 0;
             
@@ -68,6 +69,9 @@ public class MainApp {
                 }
                 else if (response == 7) {
                     viewAllRooms();
+                }
+                else if (response == 8) {
+                    deleteRoom();
                 }
                 else {
                     System.out.println("Invalid option, please try again!\n");
@@ -244,7 +248,12 @@ public class MainApp {
             roomTypeId = 0L;
         }
         
-        roomControllerBeanRemote.updateRoomById(roomId, roomNumber, roomTypeId, status);
+        try {
+            roomControllerBeanRemote.updateRoomById(roomId, roomNumber, roomTypeId, status);
+        } catch (Exception e) {
+            System.out.println("Room not found!");
+        }
+        
     }
     
     private void viewAllRooms() {
@@ -252,13 +261,31 @@ public class MainApp {
         List<Room> rooms = roomControllerBeanRemote.retrieveAllRooms();
         for(Room room:rooms) {
             String result;
-            result = "Room id: "+room.getId()+" Room Number: "+ room.getRoomNumber() + " Room available: " + room.getStatus();
+            result = "Room id: "+room.getId()+" Room Number: "+ room.getRoomNumber() + " Room available: " + room.getStatus() + " Room is disabled: " + room.getIsDisabled();
             try {
                 result = result + " Room Type: " + room.getRoomType().getTypeName();
             } catch (Exception e) {
                 result = result + " Room Type: No Room Type Assigned Yet";
             }
             System.out.println(result);
+        }
+    }
+    
+    private void deleteRoom() {
+        Scanner sc = new Scanner(System.in);
+        Long roomId;
+        viewAllRooms();
+        
+        // user input: room id
+        System.out.println("Please enter room ID:");
+        System.out.print(">");
+        roomId = sc.nextLong();
+        sc.nextLine();
+        
+        try {
+            roomControllerBeanRemote.deleteRoom(roomId);
+        } catch (Exception e) {
+            System.out.println("Room not found!");
         }
     }
     

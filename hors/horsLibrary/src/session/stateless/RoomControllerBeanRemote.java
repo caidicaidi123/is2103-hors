@@ -28,9 +28,11 @@ public interface RoomControllerBeanRemote {
 
     public void createNewRoom(Long roomNumber, Long roomTypeId);
 
-    public void updateRoomById(Long roomId, Long roomNumber, Long roomTypeId, Boolean inUse);
+    public void updateRoomById(Long roomId, Long roomNumber, Long roomTypeId, Boolean inUse) throws NoResultException;
 
     public List<Room> retrieveAllRooms();
+
+    public void deleteRoom(Long roomId);
     
     
 }

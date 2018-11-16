@@ -7,8 +7,6 @@ package session.stateless;
 
 import entity.Room;
 import entity.RoomType;
-import error.RoomNotFoundException;
-import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -82,16 +80,21 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
     }
     
     @Override
-    public void updateRoomById(Long roomId, Long roomNumber, Long roomTypeId, Boolean status) {
+    public void updateRoomById(Long roomId, Long roomNumber, Long roomTypeId, Boolean status) throws NoResultException{
         Room room = getRoomById(roomId);
-
+        
+        if (room == null) {
+            throw new NoResultException("Room not found!");
+        }
         
         room.setRoomNumber(roomNumber);
         if (roomTypeId != 0) {
             RoomType roomType = getRoomTypeById(roomTypeId);
             room.setRoomType(roomType);
         }
-        room.setStatus(status);
+        room.setStatus(status);           
+
+
     }
     
     @Override
@@ -101,7 +104,27 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
         return query.getResultList();
     }
     
-    
+    @Override
+    public void deleteRoom(Long roomId) throws NoResultException {
+        Room room = getRoomById(roomId);
+        
+        if (room == null) {
+            throw new NoResultException("Room not found!");
+        }        
+        
+        // if room status is not available (false) 
+        if (room.getStatus() == false) {
+            room.setIsDisabled(Boolean.TRUE);
+        } else {
+            // remove room from roomType.rooms
+            RoomType roomType = room.getRoomType();
+            if (roomType != null) {
+                roomType.getRooms().remove(room);
+            }
+            // remove room entity
+            em.remove(room);
+        }
+    }
     
     
     
@@ -118,10 +141,9 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
         return roomType;
     }
     
-    private Room getRoomById(Long roomId) {
-        Query query = em.createQuery("SELECT rm FROM Room rm WHERE rm.id=:inRoomId");
-        query.setParameter("inRoomId", roomId);
-        return (Room) query.getSingleResult();
+    private Room getRoomById(Long roomId) throws NoResultException {
+        Room room =  em.find(Room.class, roomId);
+        return room;
     }
     
     

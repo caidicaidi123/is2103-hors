@@ -25,12 +25,22 @@ public class Room implements Serializable {
     private Long id;
     private Boolean status;
     private Long roomNumber;
+    private Boolean isDisabled;
     
     @ManyToOne
     private RoomType roomType;
 
     public Room() {
         this.status = true;
+        this.isDisabled = false;
+    }
+
+    public Boolean getIsDisabled() {
+        return isDisabled;
+    }
+
+    public void setIsDisabled(Boolean isDisabled) {
+        this.isDisabled = isDisabled;
     }
 
     public Room(Long roomNumber) {
