@@ -25,13 +25,16 @@ public class RoomRate implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     private String roomRateName;
+    
+    private BigDecimal rate;
+    
+    private String description;
+    
 
-    @ManyToOne
-    private RateType rateType;
     
     @ManyToMany
     private List<RoomType> roomTypes;
@@ -40,10 +43,28 @@ public class RoomRate implements Serializable {
         this.roomTypes = new ArrayList<>();
     }
 
-    public RoomRate(String name) {
+    public RoomRate(String roomRateName, String description, BigDecimal rate) {
         this();
         
-        this.roomRateName = name;
+        this.roomRateName = roomRateName;
+        this.description = description;
+        this.rate = rate;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
     
     
@@ -70,14 +91,6 @@ public class RoomRate implements Serializable {
 
     public void setRoomRateName(String roomRateName) {
         this.roomRateName = roomRateName;
-    }
-
-    public RateType getRateType() {
-        return rateType;
-    }
-
-    public void setRateType(RateType rateType) {
-        this.rateType = rateType;
     }
 
     public List<RoomType> getRoomTypes() {

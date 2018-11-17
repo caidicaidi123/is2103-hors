@@ -6,7 +6,9 @@
 package horsmanagementclient;
 
 import entity.Room;
+import entity.RoomRate;
 import entity.RoomType;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 import session.stateless.RoomControllerBeanRemote;
@@ -27,13 +29,17 @@ public class MainApp {
     
     public void runApp() {
         Scanner sc = new Scanner(System.in);
-        Integer response = 0;
+        Integer response = -1;
         
-        while (true) {  
-            System.out.println("********");
+        while (true) {
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("************************");
             System.out.println("Welcome to HoRS Management Client!");
             System.out.println("Main Menu:");
-            System.out.println("********");
+            System.out.println("0. Exit ");
+            System.out.println("************************");
             System.out.println("1. Create new room type.");
             System.out.println("2. View Room Type Details.");
             System.out.println("3. Update Room Type.");
@@ -42,12 +48,19 @@ public class MainApp {
             System.out.println("6. Update Room");
             System.out.println("7. View All Rooms");
             System.out.println("8. Delete a Room");
-            System.out.println("10. Exit ");
-            response = 0;
+            System.out.println("9. Create New Room Rate");
+            System.out.println("10. View All Room Rates");
+            System.out.println("11. View a Room Rate Details");
+            System.out.println("12. Update a Room Rate");
             
-            while (response < 1 || response > 10) {                
+            // clear response from last iteration
+            response = -1;
+            
+            while (response < 0 || response > 20) {                
                 System.out.print(">");
                 response = sc.nextInt();
+                
+                
                 
                 if (response == 1) {
                     createNewRoomType();
@@ -73,14 +86,29 @@ public class MainApp {
                 else if (response == 8) {
                     deleteRoom();
                 }
+                else if (response == 9) {
+                    createNewRoomRate();
+                }
+                else if (response == 10) {
+                    viewAllRoomRates();
+                }
+                else if (response == 11) {
+                    viewRoomRateDetails();
+                }
+                else if (response == 12) {
+                    updateRoomRate();
+                }
+                else if (response == 0) {
+                    break;
+                }
                 else {
                     System.out.println("Invalid option, please try again!\n");
                 }
             }
             
             
-            
-            if (response == 10) {
+            // exist program
+            if (response == 0) {
                 break;
             }
         }
@@ -90,7 +118,6 @@ public class MainApp {
     
     
     private String createNewRoomType() {
-        System.out.println("********");
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter room type name: ");
         String typeName = sc.nextLine().trim();
@@ -101,7 +128,6 @@ public class MainApp {
     }
     
     private void viewRoomTypeDetails() {
-        System.out.println("********");
         List<RoomType> roomTypes = roomControllerBeanRemote.retrieveAllRoomType();
         Scanner sc = new Scanner(System.in);
         
@@ -116,14 +142,17 @@ public class MainApp {
         try {
             RoomType roomType = roomControllerBeanRemote.retrieveRoomTypeById(roomTypeId);
             System.out.println("Room type: "+roomType.getTypeName()+"\n"+"Room type details: "+roomType.getDescription());
+            List<RoomRate> roomRates = roomType.getRoomRates();
+            for (RoomRate roomRate : roomRates) {
+                System.out.println("Room Rate: "+roomRate.getId().toString()+" Room Rate Name: "+roomRate.getRoomRateName() + " Rate: $" + roomRate.getRate().toString());
+            }
+            
         } catch (Exception e) {
             System.out.println("Room Type does not exist!");
         }
     }
     
-    private void updateRoomType() {
-        System.out.println("********");
-        
+    private void updateRoomType() {        
         // retrieve and display all room types
         List<RoomType> roomTypes = roomControllerBeanRemote.retrieveAllRoomType();
         Scanner sc = new Scanner(System.in);
@@ -141,7 +170,7 @@ public class MainApp {
         try {
             RoomType roomType = roomControllerBeanRemote.retrieveRoomTypeById(roomTypeId);
             System.out.println("Room type: "+roomType.getTypeName()+"\n"+"Room type details: "+roomType.getDescription());
-            System.out.println("********");
+            System.out.println("************************");
         } catch (Exception e) {
             System.out.println("Room Type does not exist!");
         }
@@ -159,7 +188,6 @@ public class MainApp {
     }
     
     private void viewAllRoomTypes() {
-        System.out.println("********");
         List<RoomType> roomTypes = roomControllerBeanRemote.retrieveAllRoomType();
         for (RoomType roomType : roomTypes) {
             String title = roomType.getId().toString() + " " + roomType.getTypeName();
@@ -171,7 +199,7 @@ public class MainApp {
         Long roomNumber, roomTypeId;
         Scanner sc = new Scanner(System.in);
         
-        System.out.println("********");
+        System.out.println("************************");
         System.out.println("Please enter room number");
         System.out.print(">");
         roomNumber = sc.nextLong();
@@ -257,7 +285,7 @@ public class MainApp {
     }
     
     private void viewAllRooms() {
-        System.out.println("********");
+        System.out.println("************************");
         List<Room> rooms = roomControllerBeanRemote.retrieveAllRooms();
         for(Room room:rooms) {
             String result;
@@ -287,6 +315,82 @@ public class MainApp {
         } catch (Exception e) {
             System.out.println("Room not found!");
         }
+    }
+    
+    private void viewAllRoomRates() {
+        List<RoomRate> roomRates = roomControllerBeanRemote.retrieveAllRoomRates();
+        for (RoomRate roomRate : roomRates) {
+            System.out.println("Room Rate ID: "+roomRate.getId() + " Room Rate Name: "+roomRate.getRoomRateName());
+        }
+    }
+    
+    private Long viewRoomRateDetails() {
+        Scanner sc = new Scanner(System.in);
+        Long roomRateId;
+        viewAllRoomRates();
+        
+        System.out.println("Please Enter Room Rate ID:");
+        System.out.print(">");
+        roomRateId = sc.nextLong();
+        sc.nextLine();
+        
+        RoomRate roomRate = roomControllerBeanRemote.getRoomRateById(roomRateId);
+        System.out.println("Room Rate ID: "+roomRate.getId());
+        System.out.println("Room Rate Name: " + roomRate.getRoomRateName());
+        System.out.println("Room Rate Description: " + roomRate.getDescription());
+        System.out.println("Room Rate Per Night: $" + roomRate.getRate());
+        
+        List<RoomType> roomTypes = roomRate.getRoomTypes();
+        if (!roomTypes.isEmpty()) {
+            System.out.println("Room Types Adopting This Room Rate: ");
+            for (RoomType roomType : roomTypes) {
+                System.out.println("Room Type ID: "+roomType.getId() + " Room Type Name: "+roomType.getTypeName());
+            }
+        }
+        return roomRateId;
+    }
+    
+    private void updateRoomRate() {
+        Scanner sc = new Scanner(System.in);
+        Long roomRateId;
+        String roomRateName, description;
+        BigDecimal rate;
+        
+        
+
+        roomRateId = viewRoomRateDetails();
+        
+        // retrieve room rate
+        RoomRate roomRate = roomControllerBeanRemote.getRoomRateById(roomRateId);
+        
+        System.out.println("New room rate name: ");
+        roomRateName = sc.nextLine().trim();
+        System.out.println("New room rate description: ");
+        description = sc.nextLine().trim();
+        System.out.println("New room rate per night: ");
+        System.out.print("$");
+        rate = sc.nextBigDecimal();
+        sc.nextLine();
+        
+        roomControllerBeanRemote.updateRoomRate(roomRateId, roomRateName, description, rate);
+    }
+    
+    private void createNewRoomRate() {
+        Scanner sc = new Scanner(System.in);
+        String roomRateName, description;
+        BigDecimal rate;
+        
+        
+        System.out.println("Please enter new room rate name:");
+        roomRateName = sc.nextLine().trim();
+        System.out.println("Please enter room rate description:");
+        description = sc.nextLine().trim();
+        System.out.println("Please enter rate per night:");
+        System.out.print("$");
+        rate = sc.nextBigDecimal();
+        sc.nextLine();
+        
+        roomControllerBeanRemote.createNewRoomRate(roomRateName, description, rate);
     }
     
 }

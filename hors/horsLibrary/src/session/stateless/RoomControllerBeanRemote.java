@@ -6,7 +6,9 @@
 package session.stateless;
 
 import entity.Room;
+import entity.RoomRate;
 import entity.RoomType;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Remote;
 import javax.persistence.NoResultException;
@@ -33,6 +35,14 @@ public interface RoomControllerBeanRemote {
     public List<Room> retrieveAllRooms();
 
     public void deleteRoom(Long roomId);
+
+    public List<RoomRate> retrieveAllRoomRates();
+
+    public RoomRate getRoomRateById(Long roomRateId);
+
+    public void updateRoomRate(Long roomRateId, String roomRateName, String description, BigDecimal rate);
+
+    public void createNewRoomRate(String roomRateName, String descripition, BigDecimal rate);
     
     
 }

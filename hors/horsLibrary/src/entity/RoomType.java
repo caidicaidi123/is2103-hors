@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,10 +31,10 @@ public class RoomType implements Serializable {
     private String description;
     private Boolean disabled;
     
-    @OneToMany(mappedBy = "roomType")
+    @OneToMany(mappedBy = "roomType", fetch = FetchType.EAGER)
     private List<Room> rooms;
     
-    @ManyToMany(mappedBy = "roomTypes")
+    @ManyToMany(mappedBy = "roomTypes", fetch = FetchType.EAGER)
     private List<RoomRate> roomRates;
 
     public RoomType() {
@@ -48,9 +49,14 @@ public class RoomType implements Serializable {
         this.typeName = typeName;
         this.description = description;
     }
-    
-    
-    
+
+    public List<RoomRate> getRoomRates() {
+        return roomRates;
+    }
+
+    public void setRoomRates(List<RoomRate> roomRates) {
+        this.roomRates = roomRates;
+    }
 
     public String getTypeName() {
         return typeName;

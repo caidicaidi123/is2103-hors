@@ -23,8 +23,12 @@ public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    // Default true; status = true => Available || status = false => Not Available (Reserved)
     private Boolean status;
     private Long roomNumber;
+    
+    // Default false; 
     private Boolean isDisabled;
     
     @ManyToOne

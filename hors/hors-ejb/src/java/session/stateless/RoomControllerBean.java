@@ -6,7 +6,9 @@
 package session.stateless;
 
 import entity.Room;
+import entity.RoomRate;
 import entity.RoomType;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -51,6 +53,7 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
         }
         return roomType;
     }
+    
     
     @Override
     public void updateRoomTypeById(Long roomTypeId, String typeName, String description) {
@@ -126,13 +129,36 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
         }
     }
     
+    @Override
+    public List<RoomRate> retrieveAllRoomRates() {
+        Query query = em.createQuery("SELECT rr from RoomRate rr");
+        return query.getResultList();
+    }
     
+    @Override
+    public RoomRate getRoomRateById(Long roomRateId) {
+        Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.id=:inRoomRateId");
+        query.setParameter("inRoomRateId", roomRateId);
+        RoomRate roomRate = (RoomRate) query.getSingleResult();
+        
+        // !!!!!! initialise lazy relationship
+        roomRate.getRoomTypes().size();
+        return roomRate;
+    }
     
+    @Override
+    public void updateRoomRate(Long roomRateId, String roomRateName, String description, BigDecimal rate) {
+        RoomRate roomRate = em.find(RoomRate.class, roomRateId);
+        roomRate.setRoomRateName(roomRateName);
+        roomRate.setDescription(description);
+        roomRate.setRate(rate);
+    } 
     
-    
-    
-    
-    
+    @Override
+    public void createNewRoomRate(String roomRateName, String descripition, BigDecimal rate) {
+        RoomRate roomRate = new RoomRate(roomRateName, descripition, rate);
+        em.persist(roomRate);
+    }
     
     private RoomType getRoomTypeById(Long roomTypeId) {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.id=:inRoomTypeId");
@@ -142,7 +168,9 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
     }
     
     private Room getRoomById(Long roomId) throws NoResultException {
-        Room room =  em.find(Room.class, roomId);
+        Query query = em.createQuery("SELECT rm FROM Room rm WHERE rm.id=:inRoomId");
+        query.setParameter("inRoomId", roomId);
+        Room room =  (Room) query.getSingleResult();
         return room;
     }
     
