@@ -5,12 +5,15 @@
  */
 package horsmanagementclient;
 
+import entity.Employee;
+import entity.Partner;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
+import session.stateless.AccountControllerBeanRemote;
 import session.stateless.RoomControllerBeanRemote;
 
 /**
@@ -19,15 +22,164 @@ import session.stateless.RoomControllerBeanRemote;
  */
 public class MainApp {
     private RoomControllerBeanRemote roomControllerBeanRemote;
+    private AccountControllerBeanRemote accountControllerBeanRemote;
+    private String loginAcc = "";
 
     public MainApp() {
     }
 
-    public MainApp(RoomControllerBeanRemote roomControllerBeanRemote) {
+    public MainApp(RoomControllerBeanRemote roomControllerBeanRemote, AccountControllerBeanRemote accountControllerBeanRemote) {
         this.roomControllerBeanRemote = roomControllerBeanRemote;
+        this.accountControllerBeanRemote = accountControllerBeanRemote;
     }
     
-    public void runApp() {
+    public void landingPate() {
+        Scanner sc = new Scanner(System.in);
+        Integer response = -1;
+        
+        while (true) {            
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("************************");
+            System.out.println("Welcome to HoRS Management!");
+            System.out.println("Main Menu:");
+            System.out.println("0. Exit Progrom");
+            System.out.println("************************");
+            System.out.println("1. Log in as admin");
+            System.out.println("2. Log in as employee");
+            System.out.println("3. Log in as partner");
+            
+            
+            // clear response from last iteration
+            response = -1;
+            
+            while (response < 0 || response > 3) {                
+                System.out.print(">");
+                response = sc.nextInt();
+                
+                if (response == 1) {
+                    loginAsAdmin();
+                } 
+                else if (response == 2) {
+                    loginAsEmployee();
+                }
+                else if (response == 3) {
+                    loginAsPartner();
+                }
+                else if (response == 0) {
+                    break;
+                }
+                else {
+                    System.out.println("Invalid option, please try again!\n");
+                }
+            }
+            
+            // exist program
+            if (response == 0) {
+                break;
+            }
+        }
+    }
+    
+    private void adminPage() {
+        Scanner sc = new Scanner(System.in);
+        Integer response = -1;
+        
+        while (true) {            
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("************************");
+            System.out.println("Welcome to HoRS Admin Page!");
+            System.out.println("Main Menu:");
+            System.out.println("0. Logout ");
+            System.out.println("************************");
+            System.out.println("1. Create new employee account");
+            System.out.println("2. Create new partner account");
+            System.out.println("3. View all empolyees");
+            System.out.println("4. View all partners");
+            
+            
+            // clear response from last iteration
+            response = -1;
+            
+            while (response < 0 || response > 3) {                
+                System.out.print(">");
+                response = sc.nextInt();
+                
+                if (response == 1) {
+                    createNewEmployee();
+                } 
+                else if (response == 2) {
+                    createNewPartner();
+                }
+                else if (response == 3) {
+                    viewAllEmployees();
+                }
+                else if (response == 4) {
+                    viewAllPartners();
+                }
+                else if (response == 0) {
+                    loginAcc = "";
+                    break;
+                }
+                else {
+                    System.out.println("Invalid option, please try again!\n");
+                }
+            }
+            
+            // log out
+            if (response == 0) {
+                loginAcc = "";
+                break;
+            }
+        }
+    }
+    
+    private void partnerPage() {
+        Scanner sc = new Scanner(System.in);
+        Integer response = -1;
+        
+        while (true) {            
+            System.out.println("");
+            System.out.println("");
+            System.out.println("");
+            System.out.println("************************");
+            System.out.println("HoRS Partner Page!");
+            System.out.println("Welcome " + loginAcc);
+            System.out.println("0. Logout ");
+            System.out.println("************************");
+            System.out.println("1. Action 1");       
+            
+            // clear response from last iteration
+            response = -1;
+            
+            while (response < 0 || response > 3) {                
+                System.out.print(">");
+                response = sc.nextInt();
+                
+                if (response == 1) {
+                    
+                } 
+                else if (response == 0) {
+                    loginAcc = "";
+                    break;
+                }
+                else {
+                    System.out.println("Invalid option, please try again!\n");
+                }
+            }
+            
+            // logout
+            if (response == 0) {
+                loginAcc = "";
+                break;
+            }
+        }
+    }
+    
+    private void employeePage() {
         Scanner sc = new Scanner(System.in);
         Integer response = -1;
         
@@ -36,9 +188,9 @@ public class MainApp {
             System.out.println("");
             System.out.println("");
             System.out.println("************************");
-            System.out.println("Welcome to HoRS Management Client!");
-            System.out.println("Main Menu:");
-            System.out.println("0. Exit ");
+            System.out.println("HoRS Management Page Main Menu");
+            System.out.println("Welcome " + loginAcc);
+            System.out.println("0. Logout ");
             System.out.println("************************");
             System.out.println("");
             System.out.println("Room Type Management");
@@ -109,6 +261,7 @@ public class MainApp {
                     deleteRoomRate();
                 }
                 else if (response == 0) {
+                    loginAcc = "";
                     break;
                 }
                 else {
@@ -119,14 +272,140 @@ public class MainApp {
             
             // exist program
             if (response == 0) {
+                loginAcc = "";
                 break;
             }
         }
     }
     
     
+  
+
+    
+    // admin page methods
+    private void createNewEmployee() {
+        Scanner sc = new Scanner(System.in);
+        Boolean authorized = false;
+        String accountName, password;
+        
+        
+        System.out.println("Please enter account name:");
+        accountName = sc.nextLine().trim();
+        System.out.println("Please enter password");
+        password = sc.nextLine().trim();
+        
+        accountControllerBeanRemote.createNewEmployee(accountName, password);
+        System.out.println("Employee created successfully");
+    }
+    
+    private void createNewPartner() {
+        Scanner sc = new Scanner(System.in);
+        Boolean authorized = false;
+        String accountName, password;
+        
+        
+        System.out.println("Please enter account name:");
+        accountName = sc.nextLine().trim();
+        System.out.println("Please enter password");
+        password = sc.nextLine().trim();
+        
+        accountControllerBeanRemote.createNewPartner(accountName, password);
+        System.out.println("Partner created successfully");
+    }
+    
+    private void viewAllEmployees() {
+        List<Employee> employees = accountControllerBeanRemote.retrieveAllEmployees();
+        for (Employee employee : employees) {
+            System.out.println("Employee ID: "+employee.getId().toString() + " Account: "+employee.getAccountName());
+        }
+    }
+    
+    private void viewAllPartners() {
+        List<Partner> partners = accountControllerBeanRemote.retrieveAllPartners();
+        for (Partner partner : partners) {
+            System.out.println("Partner ID: "+partner.getId().toString()+" Account: "+partner.getPartnerAccountName());
+        }
+    }
     
     
+    
+    // landing page methods
+    private void loginAsAdmin() {
+        Scanner sc = new Scanner(System.in);
+        String accountName, password;
+        
+        
+        System.out.println("Please enter account name");
+        accountName = sc.nextLine().trim();
+        System.out.println("Please enter password");
+        password = sc.nextLine().trim();
+        
+        if (accountName.equals("admin") && password.equals("admin")) {
+            loginAcc = accountName;
+            System.out.println("Admin login successfully");
+            adminPage();
+        }
+        else {
+            System.out.println("Incorrect account name or password");
+        }
+    }
+    
+    private void loginAsEmployee() {
+        Scanner sc = new Scanner(System.in);
+        Boolean authorized = false;
+        String accountName, password;
+        
+        
+        System.out.println("Please enter account name:");
+        accountName = sc.nextLine().trim();
+        System.out.println("Please enter password");
+        password = sc.nextLine().trim();
+        
+        try {
+            authorized = accountControllerBeanRemote.employeeAuthentication(accountName, password);
+                if (authorized) {
+                loginAcc = accountName;
+                System.out.println(accountName + " login successfully");
+                employeePage();
+            }
+            else {
+                System.out.println("Incorrect account name or password");
+            }
+        } catch (Exception e) {
+            System.out.println("Employee account not found");
+        }
+    }
+    
+    private void loginAsPartner() {
+        Scanner sc = new Scanner(System.in);
+        Boolean authorized = false;
+        String accountName, password;
+        
+        
+        System.out.println("Please enter account name:");
+        accountName = sc.nextLine().trim();
+        System.out.println("Please enter password");
+        password = sc.nextLine().trim();
+        
+        try {
+            authorized = accountControllerBeanRemote.partnerAuthentication(accountName, password);
+                if (authorized) {
+                loginAcc = accountName;
+                System.out.println(accountName + " login successfully");
+                partnerPage();
+            }
+            else {
+                System.out.println("Incorrect account name or password");
+            }
+        } catch (Exception e) {
+            System.out.println("Employee account not found");
+        }
+    }
+    
+    
+    
+    
+    // employee page methods
     private String createNewRoomType() {
         Scanner sc = new Scanner(System.in);
         System.out.println("Please enter room type name: ");
@@ -415,4 +694,5 @@ public class MainApp {
         
         roomControllerBeanRemote.deleteRoomRateById(roomRateId);
     }
+    
 }

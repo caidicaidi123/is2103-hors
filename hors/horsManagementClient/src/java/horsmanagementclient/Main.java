@@ -6,6 +6,7 @@
 package horsmanagementclient;
 
 import javax.ejb.EJB;
+import session.stateless.AccountControllerBeanRemote;
 import session.stateless.RoomControllerBeanRemote;
 
 /**
@@ -14,16 +15,20 @@ import session.stateless.RoomControllerBeanRemote;
  */
 public class Main {
 
+    @EJB(name = "AccountControllerBeanRemote")
+    private static AccountControllerBeanRemote accountControllerBeanRemote;
+
     @EJB(name = "RoomControllerBeanRemote")
     private static RoomControllerBeanRemote roomControllerBeanRemote;
+    
     
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        MainApp mainApp = new MainApp(roomControllerBeanRemote);
-        mainApp.runApp();
+        MainApp mainApp = new MainApp(roomControllerBeanRemote, accountControllerBeanRemote);
+        mainApp.landingPate();
     }
     
 }

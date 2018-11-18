@@ -6,7 +6,6 @@
 package entity;
 
 import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,32 +16,32 @@ import javax.persistence.Id;
  * @author caidi
  */
 @Entity
-public class Employee implements Serializable {
+public class Partner implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     
-    private String accountName;
-    
+    private String partnerAccountName;
     private String password;
 
-    public Employee() {
+    public Partner() {
     }
 
-    public Employee(String accountName, String password) {
+    public Partner(String partnerAccountName, String password) {
         this();
-        this.accountName = accountName;
+        
+        this.partnerAccountName = partnerAccountName;
         this.password = password;
     }
 
-    public String getAccountName() {
-        return accountName;
+    public String getPartnerAccountName() {
+        return partnerAccountName;
     }
 
-    public void setAccountName(String accountName) {
-        this.accountName = accountName;
+    public void setPartnerAccountName(String partnerAccountName) {
+        this.partnerAccountName = partnerAccountName;
     }
 
     public String getPassword() {
@@ -52,7 +51,7 @@ public class Employee implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
     public Long getId() {
         return id;
     }
@@ -71,10 +70,10 @@ public class Employee implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Employee)) {
+        if (!(object instanceof Partner)) {
             return false;
         }
-        Employee other = (Employee) object;
+        Partner other = (Partner) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -83,7 +82,7 @@ public class Employee implements Serializable {
 
     @Override
     public String toString() {
-        return "entity.Employee[ id=" + id + " ]";
+        return "entity.Partner[ id=" + id + " ]";
     }
     
 }

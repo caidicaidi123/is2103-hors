@@ -6,6 +6,7 @@
 package session.singleton;
 
 import entity.Employee;
+import entity.Partner;
 import entity.RateType;
 import entity.Room;
 import entity.RoomRate;
@@ -45,6 +46,10 @@ public class DataInitialisationBean {
         if (em.find(Employee.class, 1l) == null) {
             initialiseEmployeeData();
         }
+        
+        if (em.find(Partner.class, 1l) == null) {
+            initialisePartnerData();
+        }
          
         if (em.find(RoomRate.class, 1l) == null) {
             initialiseRoomRateData();
@@ -56,7 +61,7 @@ public class DataInitialisationBean {
                 assignRoomRateToRoomType();
                 
             } catch (NoResultException e) {
-                System.out.println(e.getMessage());
+                System.out.println("#### Data initialisation error!");
             }
         }
         
@@ -65,8 +70,26 @@ public class DataInitialisationBean {
         
     }
     
+    
+    private void initialisePartnerData() {
+        Partner partner;
+        partner = new Partner("partner1", "password");
+        em.persist(partner);
+        
+        partner = new Partner("partner2", "password");
+        em.persist(partner);
+        
+    }
+    
     private void initialiseEmployeeData() {
-        Employee employee = new Employee("Test Manager");
+        Employee employee;
+        employee = new Employee("alice@gmail.com", "password");
+        em.persist(employee);
+        
+        employee = new Employee("tom@gmail.com", "password");
+        em.persist(employee);
+        
+        employee = new Employee("bob@gmail.com", "password");
         em.persist(employee);
     }
     
@@ -159,7 +182,6 @@ public class DataInitialisationBean {
         Query query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomRateName=:inRoomRateName");
         query.setParameter("inRoomRateName", "Published Rate");
         publishedRate = (RoomRate) query.getSingleResult();
-        System.out.println("##############\n"+publishedRate.getRoomRateName().toString());
         
         query = em.createQuery("SELECT rr FROM RoomRate rr WHERE rr.roomRateName=:inRoomRateName");
         query.setParameter("inRoomRateName", "Normal Rate");
@@ -180,7 +202,6 @@ public class DataInitialisationBean {
             roomType.getRoomRates().add(normalRate);
             publishedRate.getRoomTypes().add(roomType);
             normalRate.getRoomTypes().add(roomType);
-            System.out.println("####"+roomType.getTypeName().toString());
         }
     }
 }
