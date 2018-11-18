@@ -5,10 +5,12 @@
  */
 package session.stateless;
 
+import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
 import javax.persistence.NoResultException;
@@ -45,6 +47,20 @@ public interface RoomControllerBeanRemote {
     public void createNewRoomRate(String roomRateName, String descripition, BigDecimal rate);
 
     public void deleteRoomRateById(Long roomRateId);
+
+    public List<Room> retrieveAllAvailiableRooms();
+
+    public void createNewReservation(String guessName, Date checkInDate, Date checkOutDate, Long roomId) throws NoResultException;
+
+    public List<Reservation> retrieveAllReservations();
+
+    public Room getRoomById(Long roomId) throws NoResultException;
+
+    public String processReservations();
+
+    public String checkInGuest(String guestName) throws NoResultException;
+
+    public String checkOutGuest(String guestName)throws NoResultException;
     
-    
+
 }

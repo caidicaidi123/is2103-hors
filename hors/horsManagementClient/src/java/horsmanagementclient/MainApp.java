@@ -7,10 +7,14 @@ package horsmanagementclient;
 
 import entity.Employee;
 import entity.Partner;
+import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 import session.stateless.AccountControllerBeanRemote;
@@ -211,6 +215,18 @@ public class MainApp {
             System.out.println("11. View a Room Rate Details");
             System.out.println("12. Update a Room Rate");
             System.out.println("13. Delete a Room Rate");
+            System.out.println("");
+            System.out.println("Reservation Management");
+            System.out.println("14. Create a New Reservation");
+            System.out.println("15. View All Reservations");
+            System.out.println("16. Process Current Reservations");
+            System.out.println("");
+            System.out.println("Guest Service Management");
+            System.out.println("17. Search All Available Rooms");
+            System.out.println("18. Walk-In Reservation");
+            System.out.println("19. Guest Check In");
+            System.out.println("20. Guest Check Out");
+            
             
             // clear response from last iteration
             response = -1;
@@ -259,6 +275,27 @@ public class MainApp {
                 }
                 else if (response == 13) {
                     deleteRoomRate();
+                }
+                else if (response == 14) {
+                    createNewReservation();
+                }
+                else if (response == 15) {
+                    viewAllReservations();
+                }
+                else if (response == 16) {
+                    processReservation();
+                }
+                else if (response == 17) {
+                    viewAllAvailableRooms();
+                }
+                else if (response == 18) {
+                    createNewReservation();
+                }
+                else if (response == 19) {
+                    checkInGuest();
+                }
+                else if (response == 20) {
+                    checkOutGuest();
                 }
                 else if (response == 0) {
                     loginAcc = "";
@@ -695,4 +732,132 @@ public class MainApp {
         roomControllerBeanRemote.deleteRoomRateById(roomRateId);
     }
     
+    private void createNewReservation() {
+        Scanner sc = new Scanner(System.in);
+        String guestName, checkInDateString, checkOutDateString;
+        Date checkInDate, checkOutDate;
+        Long roomId;
+        List<Room> availableRooms;
+        DateFormat sourceFormat = new SimpleDateFormat("dd/MM/yyyy");
+        
+        // initilise date
+        checkInDate = new Date(0, 0, 0);
+        checkOutDate = new Date(0, 0, 0);
+        
+        availableRooms = roomControllerBeanRemote.retrieveAllAvailiableRooms();
+        if (availableRooms.isEmpty()) {
+            System.out.println("No available room now");
+            return;
+        } 
+        else {
+            // display all available rooms
+            for(Room room:availableRooms) {
+                String result;
+                result = "Room id: "+room.getId()+" Room Number: "+ room.getRoomNumber() + " Room available: " + room.getStatus() + " Room is disabled: " + room.getIsDisabled();
+                try {
+                    result = result + " Room Type: " + room.getRoomType().getTypeName();
+                } catch (Exception e) {
+                    result = result + " Room Type: No Room Type Assigned Yet";
+                }
+                System.out.println(result);
+            }
+            
+            // promt user enter reservation details
+            System.out.println("Please enter guest name: ");
+            guestName = sc.nextLine().trim();
+            
+            System.out.println("Please enter check in date (dd/MM/yyy)");
+            checkInDateString = sc.nextLine().trim();
+            try {
+                checkInDate = sourceFormat.parse(checkInDateString);
+            } catch (Exception e) {
+                System.out.println("Date format not correct");
+            }
+            
+            System.out.println("Please enter check out date (dd/MM/yyy)");
+            checkOutDateString = sc.nextLine().trim();
+            
+            try {
+                checkInDate = sourceFormat.parse(checkOutDateString);
+            } catch (Exception e) {
+                System.out.println("Date format not correct");
+                return;
+            }
+            
+            System.out.println("Please enter room ID: ");
+            roomId = sc.nextLong();
+            sc.nextLine();
+            
+            roomControllerBeanRemote.createNewReservation(guestName, checkInDate, checkOutDate, roomId);
+            System.out.println("Reservation created successfully!");
+        }
+    }
+    
+    private void viewAllReservations() {
+        List<Reservation> reservations = roomControllerBeanRemote.retrieveAllReservations();
+        if (reservations.size() == 0) {
+            System.out.println("No reservation found!");
+        } 
+        else {
+            for (Reservation reservation : reservations) {
+                Room room = roomControllerBeanRemote.getRoomById(reservation.getRoomId());
+                System.out.println("Reservation ID: "+reservation.getId()+" Guest Name: "+reservation.getGuestName()+" Room Number: "+room.getRoomNumber()+" Check In Date: "+reservation.getCheckInDate().toString() + " Check Out Date: "+reservation.getCheckOutDate().toString());
+                
+                
+            }
+        }
+    }
+    
+    private void processReservation() {
+        System.out.println(roomControllerBeanRemote.processReservations());
+    }
+    
+    private void viewAllAvailableRooms() {
+        List<Room> rooms = roomControllerBeanRemote.retrieveAllAvailiableRooms();
+        if (rooms.size() == 0) {
+            System.out.println("No available rooms now!");
+        }
+        else {
+            for(Room room:rooms) {
+                String result;
+                result = "Room id: "+room.getId()+" Room Number: "+ room.getRoomNumber() + " Room available: " + room.getStatus() + " Room is disabled: " + room.getIsDisabled();
+                try {
+                    result = result + " Room Type: " + room.getRoomType().getTypeName();
+                } catch (Exception e) {
+                    result = result + " Room Type: No Room Type Assigned Yet";
+                }
+                System.out.println(result);
+            }
+        }
+    }
+    
+    private void checkInGuest() {
+        Scanner sc = new Scanner(System.in);
+        String guestName;
+        
+        System.out.println("Please enter guest name: ");
+        guestName = sc.nextLine().trim();
+        
+        try {
+            System.out.println(roomControllerBeanRemote.checkInGuest(guestName));
+        } catch (Exception e) {
+            System.out.println("Cannot check in guest");
+        }
+        
+    }
+    
+    private void checkOutGuest() {
+        Scanner sc = new Scanner(System.in);
+        String guestName;
+        
+        System.out.println("Please enter guest name: ");
+        guestName = sc.nextLine().trim();
+        
+        try {
+            System.out.println(roomControllerBeanRemote.checkOutGuest(guestName));
+        } catch (Exception e) {
+            System.out.println("Cannot check out guest");
+        }
+        
+    }
 }

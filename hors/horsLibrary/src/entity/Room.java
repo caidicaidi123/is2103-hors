@@ -27,18 +27,49 @@ public class Room implements Serializable {
     // Default true; status = true => Available || status = false => Not Available (Reserved)
     private Boolean status;
     private Long roomNumber;
+    private String guestName;
+    private Boolean isCheckedIn;
     
     // Default false; 
     private Boolean isDisabled;
     
     @ManyToOne
     private RoomType roomType;
+    
+    private Reservation reservation;
 
     public Room() {
         this.status = true;
         this.isDisabled = false;
+        this.isCheckedIn = false;
     }
 
+    public Boolean getIsCheckedIn() {
+        return isCheckedIn;
+    }
+
+    public void setIsCheckedIn(Boolean isCheckedIn) {
+        this.isCheckedIn = isCheckedIn;
+    }
+
+    
+    public String getGuestName() {
+        return guestName;
+    }
+
+    public void setGuestName(String guestName) {
+        this.guestName = guestName;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
+
+    
     public Boolean getIsDisabled() {
         return isDisabled;
     }
