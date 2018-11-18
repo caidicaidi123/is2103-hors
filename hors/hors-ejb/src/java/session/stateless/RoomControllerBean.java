@@ -160,6 +160,35 @@ public class RoomControllerBean implements RoomControllerBeanRemote {
         em.persist(roomRate);
     }
     
+    
+    @Override
+    public void deleteRoomRateById(Long roomRateId) {
+        RoomRate roomRate = getRoomRateById(roomRateId);
+        
+        if (roomRate.getRoomTypes().isEmpty()) {
+            em.remove(roomRate);
+        } else {
+            roomRate.setIsDisabled(Boolean.TRUE);
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     private RoomType getRoomTypeById(Long roomTypeId) {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.id=:inRoomTypeId");
         query.setParameter("inRoomTypeId", roomTypeId);

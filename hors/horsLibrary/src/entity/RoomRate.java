@@ -34,6 +34,8 @@ public class RoomRate implements Serializable {
     
     private String description;
     
+    private Boolean isDisabled;
+    
 
     
     @ManyToMany
@@ -41,6 +43,7 @@ public class RoomRate implements Serializable {
 
     public RoomRate() {
         this.roomTypes = new ArrayList<>();
+        this.isDisabled = false;
     }
 
     public RoomRate(String roomRateName, String description, BigDecimal rate) {
@@ -51,6 +54,14 @@ public class RoomRate implements Serializable {
         this.rate = rate;
     }
 
+    public Boolean getIsDisabled() {
+        return isDisabled;
+    }
+
+    public void setIsDisabled(Boolean isDisabled) {
+        this.isDisabled = isDisabled;
+    }
+    
     public BigDecimal getRate() {
         return rate;
     }
@@ -66,16 +77,6 @@ public class RoomRate implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
     public Long getId() {
         return id;

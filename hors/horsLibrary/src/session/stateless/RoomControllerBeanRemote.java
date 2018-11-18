@@ -43,6 +43,8 @@ public interface RoomControllerBeanRemote {
     public void updateRoomRate(Long roomRateId, String roomRateName, String description, BigDecimal rate);
 
     public void createNewRoomRate(String roomRateName, String descripition, BigDecimal rate);
+
+    public void deleteRoomRateById(Long roomRateId);
     
     
 }

@@ -40,18 +40,25 @@ public class MainApp {
             System.out.println("Main Menu:");
             System.out.println("0. Exit ");
             System.out.println("************************");
+            System.out.println("");
+            System.out.println("Room Type Management");
             System.out.println("1. Create new room type.");
             System.out.println("2. View Room Type Details.");
             System.out.println("3. Update Room Type.");
             System.out.println("4. View All Room Types");
+            System.out.println("");
+            System.out.println("Room Management");
             System.out.println("5. Create new room");
             System.out.println("6. Update Room");
             System.out.println("7. View All Rooms");
             System.out.println("8. Delete a Room");
+            System.out.println("");
+            System.out.println("Room Rate Management");
             System.out.println("9. Create New Room Rate");
             System.out.println("10. View All Room Rates");
             System.out.println("11. View a Room Rate Details");
             System.out.println("12. Update a Room Rate");
+            System.out.println("13. Delete a Room Rate");
             
             // clear response from last iteration
             response = -1;
@@ -97,6 +104,9 @@ public class MainApp {
                 }
                 else if (response == 12) {
                     updateRoomRate();
+                }
+                else if (response == 13) {
+                    deleteRoomRate();
                 }
                 else if (response == 0) {
                     break;
@@ -339,6 +349,7 @@ public class MainApp {
         System.out.println("Room Rate Name: " + roomRate.getRoomRateName());
         System.out.println("Room Rate Description: " + roomRate.getDescription());
         System.out.println("Room Rate Per Night: $" + roomRate.getRate());
+        System.out.println("Room Rate Is Disabled: " + roomRate.getIsDisabled());
         
         List<RoomType> roomTypes = roomRate.getRoomTypes();
         if (!roomTypes.isEmpty()) {
@@ -393,4 +404,15 @@ public class MainApp {
         roomControllerBeanRemote.createNewRoomRate(roomRateName, description, rate);
     }
     
+    private void deleteRoomRate() {
+        Scanner sc = new Scanner(System.in);
+        Long roomRateId;
+        
+        viewAllRoomRates();
+        System.out.println("Please Enter Room Rate ID: ");
+        roomRateId = sc.nextLong();
+        sc.nextLine();
+        
+        roomControllerBeanRemote.deleteRoomRateById(roomRateId);
+    }
 }
