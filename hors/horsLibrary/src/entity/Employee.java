@@ -24,6 +24,7 @@ public class Employee implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @Column(unique = true)
     private String accountName;
     
     private String password;

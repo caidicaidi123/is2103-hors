@@ -29,5 +29,9 @@ public interface AccountControllerBeanRemote {
     public List<Employee> retrieveAllEmployees();
 
     public List<Partner> retrieveAllPartners();
+
+    public boolean guestAuthentication(String email, String password) throws NoResultException;
+
+    public void createNewGuest(String email, String password);
     
 }

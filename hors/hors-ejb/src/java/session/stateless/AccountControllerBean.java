@@ -6,7 +6,9 @@
 package session.stateless;
 
 import entity.Employee;
+import entity.Guest;
 import entity.Partner;
+import entity.Reservation;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -80,4 +82,29 @@ public class AccountControllerBean implements AccountControllerBeanRemote {
         Query query = em.createQuery("SELECT p FROM Partner p");
         return query.getResultList();
     }
+    
+    @Override
+    public void createNewGuest(String email, String password) {
+        Guest guest = new Guest(email, password);
+        em.persist(guest);
+    }
+    
+    @Override
+    public boolean guestAuthentication(String accountName, String password) throws NoResultException {
+        Guest guest;
+        Query query = em.createQuery("SELECT g FROM Guest g WHERE g.email=:inEmail");
+        query.setParameter("inEmail", accountName);
+        guest = (Guest) query.getSingleResult();
+        
+        if (guest == null) {
+            throw new NoResultException("Account not found!");
+            
+        } else if (guest.getPassword().equals(password)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+
 }

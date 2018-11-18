@@ -46,13 +46,12 @@ public class MainApp {
             System.out.println("");
             System.out.println("");
             System.out.println("************************");
-            System.out.println("Welcome to HoRS Management!");
+            System.out.println("Welcome to HoRS Management Client!");
             System.out.println("Main Menu:");
             System.out.println("0. Exit Progrom");
             System.out.println("************************");
             System.out.println("1. Log in as admin");
             System.out.println("2. Log in as employee");
-            System.out.println("3. Log in as partner");
             
             
             // clear response from last iteration
@@ -67,9 +66,6 @@ public class MainApp {
                 } 
                 else if (response == 2) {
                     loginAsEmployee();
-                }
-                else if (response == 3) {
-                    loginAsPartner();
                 }
                 else if (response == 0) {
                     break;
@@ -134,48 +130,6 @@ public class MainApp {
             }
             
             // log out
-            if (response == 0) {
-                loginAcc = "";
-                break;
-            }
-        }
-    }
-    
-    private void partnerPage() {
-        Scanner sc = new Scanner(System.in);
-        Integer response = -1;
-        
-        while (true) {            
-            System.out.println("");
-            System.out.println("");
-            System.out.println("");
-            System.out.println("************************");
-            System.out.println("HoRS Partner Page!");
-            System.out.println("Welcome " + loginAcc);
-            System.out.println("0. Logout ");
-            System.out.println("************************");
-            System.out.println("1. Action 1");       
-            
-            // clear response from last iteration
-            response = -1;
-            
-            while (response < 0 || response > 3) {                
-                System.out.print(">");
-                response = sc.nextInt();
-                
-                if (response == 1) {
-                    
-                } 
-                else if (response == 0) {
-                    loginAcc = "";
-                    break;
-                }
-                else {
-                    System.out.println("Invalid option, please try again!\n");
-                }
-            }
-            
-            // logout
             if (response == 0) {
                 loginAcc = "";
                 break;
@@ -331,7 +285,13 @@ public class MainApp {
         System.out.println("Please enter password");
         password = sc.nextLine().trim();
         
-        accountControllerBeanRemote.createNewEmployee(accountName, password);
+        try {
+            accountControllerBeanRemote.createNewEmployee(accountName, password);
+        } catch (Exception e) {
+            System.out.println("Account name existes, please try with a different account name!");
+            return;
+        }
+        
         System.out.println("Employee created successfully");
     }
     
@@ -346,7 +306,13 @@ public class MainApp {
         System.out.println("Please enter password");
         password = sc.nextLine().trim();
         
-        accountControllerBeanRemote.createNewPartner(accountName, password);
+        try {
+            accountControllerBeanRemote.createNewPartner(accountName, password);
+        } catch (Exception e) {
+            System.out.println("Account name existes, please try with a different account name!");
+            return;
+        }
+        
         System.out.println("Partner created successfully");
     }
     
@@ -413,31 +379,7 @@ public class MainApp {
         }
     }
     
-    private void loginAsPartner() {
-        Scanner sc = new Scanner(System.in);
-        Boolean authorized = false;
-        String accountName, password;
-        
-        
-        System.out.println("Please enter account name:");
-        accountName = sc.nextLine().trim();
-        System.out.println("Please enter password");
-        password = sc.nextLine().trim();
-        
-        try {
-            authorized = accountControllerBeanRemote.partnerAuthentication(accountName, password);
-                if (authorized) {
-                loginAcc = accountName;
-                System.out.println(accountName + " login successfully");
-                partnerPage();
-            }
-            else {
-                System.out.println("Incorrect account name or password");
-            }
-        } catch (Exception e) {
-            System.out.println("Employee account not found");
-        }
-    }
+    
     
     
     
@@ -860,4 +802,6 @@ public class MainApp {
         }
         
     }
+    
+    
 }
